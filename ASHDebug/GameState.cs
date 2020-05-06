@@ -5,23 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ash_practice
+namespace ASHDebug
 {
-    class GameState
+    public class GameState
     {
-        private static string UNITYPLAYER_MODULE = "UnityPlayer.dll";
+        private static readonly int FLIGHT_COOLDOWN = 1000;
+
+        private static readonly string UNITYPLAYER_MODULE = "UnityPlayer.dll";
         private static readonly int[] PLAYER = { 0x109ac54, 0x38, 0x34, 0x3C, 0x44 };
         private static readonly int MAX_FEATHERS = 0x234;
         private static readonly int IS_GROUNDED = 0x44;
 
         public int MaxFeathers { get; private set; }
         public bool IsGrounded { get; private set; }
-        public TimeSpan LastFlightTime { get; private set; }
+        public TimeSpan FlightDuration { get; private set; }
 
-        private Stopwatch Stopwatch = new Stopwatch();
+        private Stopwatch FlightStopwatch = new Stopwatch();
+        private Stopwatch Clock = new Stopwatch();
 
         private Memory Memory;
         private int BaseAddress;
+
+        private int LastFlightEnd = 0;
 
         public GameState(Process process)
         {
@@ -31,38 +36,43 @@ namespace ash_practice
             var unityPlayer = process.Modules.Cast<ProcessModule>().SingleOrDefault(
                 m => string.Equals(m.ModuleName, UNITYPLAYER_MODULE, StringComparison.OrdinalIgnoreCase)
             );
-            BaseAddress = (int) (unityPlayer?.BaseAddress ?? IntPtr.Zero);
-            Console.WriteLine("UnityPlayer.dll base address : 0x" + Convert.ToString(BaseAddress, 16));
+            BaseAddress = (int)(unityPlayer?.BaseAddress ?? IntPtr.Zero);
+            Clock.Start();
         }
 
         public void Update()
         {
             int player = Memory.ReadPointerChain<int>(BaseAddress, PLAYER);
 
-            var newMaxFeathers = Memory.ReadPointer<int>(player, MAX_FEATHERS);
-            if (newMaxFeathers != MaxFeathers)
-            {
-                Console.WriteLine("Max feathers changed to " + newMaxFeathers.ToString());
-            }
-            MaxFeathers = newMaxFeathers;
+            MaxFeathers = Memory.ReadPointer<int>(player, MAX_FEATHERS);
 
             var newIsGrounded = Memory.ReadPointer<bool>(player, IS_GROUNDED);
-            if (newIsGrounded != IsGrounded)
+            if (newIsGrounded != IsGrounded && !FlightIsOnCooldown)
             {
                 if (!newIsGrounded)
                 {
-                    Stopwatch.Reset();
-                    Stopwatch.Start();
+                    FlightStopwatch.Reset();
+                    FlightStopwatch.Start();
                 }
-                else
+                else if (FlightStopwatch.IsRunning)
                 {
-                    Stopwatch.Stop();
-                    LastFlightTime = new TimeSpan(Stopwatch.ElapsedMilliseconds * 10000);
-                    Console.WriteLine("Last flight : " + LastFlightTime.ToString("ss'.'fff"));
+                    FlightStopwatch.Stop();
+                    LastFlightEnd = (int) Clock.ElapsedMilliseconds;
                 }
-                Console.WriteLine("Grounded changed to " + newIsGrounded.ToString());
             }
             IsGrounded = newIsGrounded;
+
+            if (FlightStopwatch.IsRunning)
+            {
+                FlightDuration = new TimeSpan(FlightStopwatch.ElapsedMilliseconds * 10000);
+            }
+        }
+
+        public bool FlightIsOnCooldown
+        {
+            get {
+                return Clock.ElapsedMilliseconds <= LastFlightEnd + FLIGHT_COOLDOWN;
+            }
         }
     }
 }

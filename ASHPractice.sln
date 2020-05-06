@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1062
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ash-practice", "ash-practice.csproj", "{A1910A94-F5A1-4780-98E7-B1AAD24CCF16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASHDebug", "ASHDebug\ASHDebug.csproj", "{A1910A94-F5A1-4780-98E7-B1AAD24CCF16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASHPracticeGUI", "ASHPracticeGUI\ASHPracticeGUI.csproj", "{8D2A154E-333C-44BB-B4B3-04DA78C67298}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A1910A94-F5A1-4780-98E7-B1AAD24CCF16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1910A94-F5A1-4780-98E7-B1AAD24CCF16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1910A94-F5A1-4780-98E7-B1AAD24CCF16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2A154E-333C-44BB-B4B3-04DA78C67298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2A154E-333C-44BB-B4B3-04DA78C67298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2A154E-333C-44BB-B4B3-04DA78C67298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2A154E-333C-44BB-B4B3-04DA78C67298}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

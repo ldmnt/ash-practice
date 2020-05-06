@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ash_practice
+namespace ASHDebug
 {
     class WinAPI
     {

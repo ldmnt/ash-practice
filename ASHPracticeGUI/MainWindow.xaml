@@ -1,0 +1,19 @@
+﻿<Window x:Class="ASHPracticeGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ASHPracticeGUI"
+        mc:Ignorable="d"
+        Title="ASH Practice" Height="300" Width="200"
+        ResizeMode="NoResize"
+        Closing="OnWindowClosed">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="10,39,0,0" TextWrapping="Wrap" Text="Grounded: " VerticalAlignment="Top" Width="59"/>
+        <TextBlock x:Name="GroundedValue" HorizontalAlignment="Left" Margin="128,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="56"/>
+        <Button x:Name="AttachButton" Content="attach" HorizontalAlignment="Left" Margin="58,238,0,0" VerticalAlignment="Top" Width="75" Click="AttachButtonClick"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85"><Run Text="Flight "/><Run Text="duration"/><Run Text=": "/></TextBlock>
+        <TextBlock x:Name="LastFlightValue" HorizontalAlignment="Left" Margin="128,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="2.342,0.807" Width="48"/>
+        <Rectangle x:Name="CooldownIndicator" Fill="Black" HorizontalAlignment="Right" Height="5" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="10.749,-13.294" Margin="0,72,10,0" Visibility="Hidden"/>
+    </Grid>
+</Window>
