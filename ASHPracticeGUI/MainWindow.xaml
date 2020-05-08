@@ -7,13 +7,16 @@
         mc:Ignorable="d"
         Title="ASH Practice" Height="300" Width="200"
         ResizeMode="NoResize"
+        Topmost="False"
         Closing="OnWindowClosed">
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,39,0,0" TextWrapping="Wrap" Text="Grounded: " VerticalAlignment="Top" Width="59"/>
         <TextBlock x:Name="GroundedValue" HorizontalAlignment="Left" Margin="128,36,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="56"/>
-        <Button x:Name="AttachButton" Content="attach" HorizontalAlignment="Left" Margin="58,238,0,0" VerticalAlignment="Top" Width="75" Click="AttachButtonClick"/>
+        <Button x:Name="AttachButton" Content="attach" HorizontalAlignment="Left" Margin="10,233,0,0" VerticalAlignment="Top" Width="75" Click="AttachButtonClick"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="85"><Run Text="Flight "/><Run Text="duration"/><Run Text=": "/></TextBlock>
         <TextBlock x:Name="LastFlightValue" HorizontalAlignment="Left" Margin="128,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="2.342,0.807" Width="48"/>
         <Rectangle x:Name="CooldownIndicator" Fill="Black" HorizontalAlignment="Right" Height="5" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="10.749,-13.294" Margin="0,72,10,0" Visibility="Hidden"/>
+        <TextBlock HorizontalAlignment="Left" Margin="96,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="62" FontSize="10"><Run Text="always "/><Run Text="on top"/></TextBlock>
+        <CheckBox x:Name="OnTopCheckBox" Content="CheckBox" HorizontalAlignment="Left" Margin="163,236,0,0" VerticalAlignment="Top" Width="13" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxUnchecked"/>
     </Grid>
 </Window>

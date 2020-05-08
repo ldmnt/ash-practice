@@ -106,5 +106,15 @@ namespace ASHPracticeGUI
         {
             Engine.Stop();
         }
+
+        private void OnTopCheckBoxChecked(object sender, RoutedEventArgs e)
+        {
+            this.Topmost = true;
+        }
+
+        private void OnTopCheckBoxUnchecked(object sender, RoutedEventArgs e)
+        {
+            this.Topmost = false;
+        }
     }
 }
