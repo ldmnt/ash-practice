@@ -63,6 +63,18 @@ namespace ASHDebug
             {
                 return BitConverter.ToBoolean(bytes, 0);
             }
+            else if (type == typeof(Vector))
+            {
+                if (bytes.Length != 12)
+                {
+                    throw new Exception("Invalid input byte size.");
+                }
+                Vector v;
+                v.X = BitConverter.ToSingle(bytes, 0);
+                v.Y = BitConverter.ToSingle(bytes, 4);
+                v.Z = BitConverter.ToSingle(bytes, 8);
+                return v;
+            }
             else
             {
                 throw new NotImplementedException("Conversion is not implemented for this data type.");

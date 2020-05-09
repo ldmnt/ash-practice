@@ -23,7 +23,7 @@ namespace ASHPracticeGUI
     public class DebugEngine
     {
         private static readonly string PROC_NAME = "AShortHike";
-        private static readonly int FRAMERATE = 60;
+        public static readonly int FRAMERATE = 60;
 
         public GameState GameState;
         private Process GameProcess;
@@ -74,12 +74,17 @@ namespace ASHPracticeGUI
 
     public partial class MainWindow : Window
     {
+        public static readonly int LOW_FRAMERATE = 10;
+
         private DebugEngine Engine;
+        private short FrameCountdown = 1;
+        private short RefreshPeriod;    // number of debug frames between each refresh
 
         public MainWindow()
         {
             InitializeComponent();
             Engine = new DebugEngine(this);
+            RefreshPeriod = (short) ((float) DebugEngine.FRAMERATE / LOW_FRAMERATE);
         }
 
         private void AttachButtonClick(object sender, RoutedEventArgs e)
@@ -97,9 +102,33 @@ namespace ASHPracticeGUI
         public void UpdateData()
         {
             var gameState = Engine.GameState;
-            GroundedValue.Text = gameState.IsGrounded.ToString();
-            LastFlightValue.Text = gameState.FlightDuration.ToString("ss'.'fff");
-            CooldownIndicator.Visibility = gameState.FlightIsOnCooldown ? Visibility.Visible : Visibility.Hidden;
+            Grounded.Visibility = gameState.IsGrounded ? Visibility.Visible : Visibility.Hidden;
+            Climbing.Visibility = gameState.IsClimbing ? Visibility.Visible : Visibility.Hidden;
+            Gliding.Visibility = gameState.IsGliding ? Visibility.Visible : Visibility.Hidden;
+            Swimming.Visibility = gameState.IsSwimming ? Visibility.Visible : Visibility.Hidden;
+
+            FlightCooldown.Visibility = gameState.FlightIsOnCooldown ? Visibility.Visible : Visibility.Hidden;
+            FlightTime.Text = gameState.FlightDuration.ToString("ss'.'fff");
+            GlideTime.Text = gameState.GlideDuration.ToString("ss'.'fff");
+            TimeSpan setupTime = gameState.FlightDuration - gameState.GlideDuration;
+            SetupTime.Text = setupTime.ToString("ss'.'fff");
+
+            FrameCountdown -= 1;
+            if (FrameCountdown <= 0)
+            {
+                FrameCountdown = RefreshPeriod;
+
+                // values with low refresh rate for readability
+                MaxAltitude.Text = gameState.MaxAltitude.ToString("F2");
+                MaxHorSpeed.Text = gameState.MaxHorizontalSpeed.ToString("F2");
+
+                PositionX.Text = gameState.Position.X.ToString("F2");
+                PositionY.Text = gameState.Position.Z.ToString("F2");
+                Altitude.Text = gameState.Position.Y.ToString("F2");
+
+                HorizontalSpeed.Text = gameState.HorizontalSpeed.ToString("F2");
+                VerticalSpeed.Text = gameState.Velocity.Y.ToString("F2");
+            }
         }
 
         private void OnWindowClosed(object sender, CancelEventArgs e)
