@@ -2,8 +2,9 @@ This is a small practice utility for [A Short Hike](http://ashorthike.com/).
 
 ### Features
 - position and speed of the player
-- analysis of the last flight
 - current state of the character (climbing, gliding, …)
+- analysis of the last flight
+- timer that allows measuring small runs between two locations (with comparison to current best)
 
 ### Requirements
 

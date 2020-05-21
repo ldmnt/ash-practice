@@ -68,6 +68,7 @@ namespace ASHPracticeGUI
 
         public void AfterUpdate()
         {
+            Window.TimeTrial.Update();
             Window.Dispatcher.BeginInvoke((Action)(() => Window.UpdateData()));
         }
     }
@@ -75,6 +76,8 @@ namespace ASHPracticeGUI
     public partial class MainWindow : Window
     {
         public static readonly int LOW_FRAMERATE = 10;
+
+        public TimeTrial TimeTrial;
 
         private DebugEngine Engine;
         private short FrameCountdown = 1;
@@ -84,7 +87,7 @@ namespace ASHPracticeGUI
         {
             InitializeComponent();
             Engine = new DebugEngine(this);
-            RefreshPeriod = (short) ((float) DebugEngine.FRAMERATE / LOW_FRAMERATE);
+            RefreshPeriod = (short)((float)DebugEngine.FRAMERATE / LOW_FRAMERATE);
         }
 
         private void AttachButtonClick(object sender, RoutedEventArgs e)
@@ -92,6 +95,10 @@ namespace ASHPracticeGUI
             if (Engine.Attach())
             {
                 Engine.Start();
+                TimeTrial = new TimeTrial(Engine.GameState);
+                ButtonSetStart.IsEnabled = true;
+                ButtonSetEnd.IsEnabled = true;
+                ButtonResetAll.IsEnabled = true;
             }
             else
             {
@@ -108,10 +115,23 @@ namespace ASHPracticeGUI
             Swimming.Visibility = gameState.IsSwimming ? Visibility.Visible : Visibility.Hidden;
 
             FlightCooldown.Visibility = gameState.FlightIsOnCooldown ? Visibility.Visible : Visibility.Hidden;
-            FlightTime.Text = gameState.FlightDuration.ToString("ss'.'fff");
-            GlideTime.Text = gameState.GlideDuration.ToString("ss'.'fff");
+            FlightTime.Text = gameState.FlightDuration.ToString("ss','fff");
+            GlideTime.Text = gameState.GlideDuration.ToString("ss','fff");
             TimeSpan setupTime = gameState.FlightDuration - gameState.GlideDuration;
-            SetupTime.Text = setupTime.ToString("ss'.'fff");
+            SetupTime.Text = setupTime.ToString("ss','fff");
+
+            CurrentTime.Text = TimeTrial.CurrentTime.ToString("ss','fff");
+            TimeSpan? delta = TimeTrial.Delta;
+            if (delta == null)
+            {
+                Delta.Text = "";
+            }
+            else
+            {
+                string sign = delta > TimeSpan.Zero ? "+" : "-";
+                Delta.Text = sign + delta?.ToString("ss','fff");
+            }
+            BestTime.Text = TimeTrial.BestTime?.ToString("ss','fff");
 
             FrameCountdown -= 1;
             if (FrameCountdown <= 0)
@@ -144,6 +164,168 @@ namespace ASHPracticeGUI
         private void OnTopCheckBoxUnchecked(object sender, RoutedEventArgs e)
         {
             this.Topmost = false;
+        }
+
+        private void ButtonSetStart_Click(object sender, RoutedEventArgs e)
+        {
+            TimeTrial.StartPosition = Engine.GameState.Position;
+            ButtonSetStart.Content = "ack";
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            timer.Start();
+            timer.Tick += (sender_, args) =>
+            {
+                timer.Stop();
+                ButtonSetStart.Content = "set start";
+            };
+        }
+
+        private void ButtonSetEnd_Click(object sender, RoutedEventArgs e)
+        {
+            TimeTrial.EndPosition = Engine.GameState.Position;
+            ButtonSetEnd.Content = "ack";
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            timer.Start();
+            timer.Tick += (sender_, args) =>
+            {
+                timer.Stop();
+                ButtonSetEnd.Content = "set end";
+            };
+        }
+
+        private string FormatVector(ASHDebug.Vector v)
+        {
+            return String.Format(
+                "[{0}, {1}, {2}]",
+                v.X.ToString("F0"),
+                v.Z.ToString("F0"),
+                v.Y.ToString("F0"));
+        }
+
+        private void ButtonResetAll_Click(object sender, RoutedEventArgs e)
+        {
+            TimeTrial = new TimeTrial(Engine.GameState);
+            ButtonResetAll.Content = "ack";
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            timer.Start();
+            timer.Tick += (sender_, args) =>
+            {
+                timer.Stop();
+                ButtonResetAll.Content = "reset all";
+            };
+        }
+    }
+
+    public class TimeTrial
+    {
+        public static float TRIGGER_DISTANCE = 2.0f;
+
+        public TimeSpan CurrentTime { get; private set; }
+        public TimeSpan? BestTime { get; private set; }
+        public TimeSpan? Delta { get; private set; }
+
+        private GameState GameState;
+        private Stopwatch Timer = new Stopwatch();
+        private byte TimeTrialState = 2;   // 1: at start, 2: at end, 0: neither
+
+        private bool StartSet = false;
+        private bool EndSet = false;
+        private ASHDebug.Vector _startPositon;
+        private ASHDebug.Vector _endPositon;
+
+        public ASHDebug.Vector StartPosition
+        {
+            get => _startPositon;
+            set
+            {
+                _startPositon = value;
+                HardReset();
+                StartSet = true;
+            }
+        }
+
+        public ASHDebug.Vector EndPosition
+        {
+            get => _endPositon;
+            set
+            {
+                _endPositon = value;
+                TimeTrialState = 2;
+                HardReset();
+                EndSet = true;
+            }
+        }
+
+        public TimeTrial(GameState gameState)
+        {
+            GameState = gameState;
+        }
+
+        public void Update()
+        {
+            if (!StartSet || !EndSet) { return; }
+
+            byte newState = CurrentState(GameState.Position);
+            if (TimeTrialState != 1 && newState == 1)
+            {
+                Reset();
+            } 
+            if (TimeTrialState != 2 && newState == 2 && Timer.IsRunning)
+            {
+                Stop();
+            }
+            if (TimeTrialState == 1 && newState == 0)
+            {
+                Start();
+            }
+            TimeTrialState = newState;
+
+            CurrentTime = new TimeSpan(Timer.ElapsedMilliseconds * 10000);
+        }
+
+        private void Start()
+        {
+            Timer.Start();
+        }
+
+        private void Stop()
+        {
+            Timer.Stop();
+            CurrentTime = new TimeSpan(Timer.ElapsedMilliseconds * 10000);
+            Delta = BestTime == null ? null : CurrentTime - BestTime;
+            if (BestTime == null || BestTime > CurrentTime)
+            {
+                BestTime = CurrentTime;
+            }
+        }
+
+        private void Reset()
+        {
+            Delta = null;
+            Timer.Reset();
+        }
+
+        private void ResetBest()
+        {
+            BestTime = null;
+        }
+
+        public void HardReset()
+        {
+            Reset();
+            ResetBest();
+        }
+
+        private byte CurrentState(ASHDebug.Vector position)
+        {
+            if (position.Sub(StartPosition).Length() < TRIGGER_DISTANCE)
+            {
+                return 1;
+            }
+            if (position.Sub(EndPosition).Length() < TRIGGER_DISTANCE)
+            {
+                return 2;
+            }
+            return 0;
         }
     }
 }

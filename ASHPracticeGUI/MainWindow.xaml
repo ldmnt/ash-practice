@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="ASH Practice" Height="600" Width="160"
+        Title="ASH Practice" Height="750" Width="160"
         ResizeMode="NoResize"
         Topmost="False"
         Closing="OnWindowClosed">
@@ -72,10 +72,32 @@
             <Ellipse x:Name="Climbing" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,67,15,33" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
             <Ellipse x:Name="Swimming" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,87,15,12" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
         </Grid>
-        <Button Content="attach" HorizontalAlignment="Center" Margin="46,508,46,-437" VerticalAlignment="Top" Width="58" Height="24" Click="AttachButtonClick"/>
-        <CheckBox x:Name="AlwaysOnTop" Content="always on top" HorizontalAlignment="Left" Height="17" Margin="10,480,0,-402" VerticalAlignment="Top" Width="113" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxUnchecked"/>
+        <Button Content="attach" HorizontalAlignment="Center" Margin="46,664,46,-593" VerticalAlignment="Top" Width="58" Height="24" Click="AttachButtonClick"/>
+        <CheckBox x:Name="AlwaysOnTop" Content="always on top" HorizontalAlignment="Left" Height="17" Margin="10,642,0,-564" VerticalAlignment="Top" Width="113" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxUnchecked"/>
         <Separator Margin="0,162,0,-76"/>
         <Separator Margin="0,329,0,-243"/>
         <Separator Margin="0,460,0,-374"/>
+        <Grid HorizontalAlignment="Left" Height="149" Margin="0,474,0,-528" VerticalAlignment="Top" Width="150">
+            <Button x:Name="ButtonSetStart" Content="set start" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Width="56" Height="24" Click="ButtonSetStart_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonSetEnd" Content="set end" HorizontalAlignment="Left" Margin="84,115,0,0" VerticalAlignment="Top" Width="56" Height="24" Click="ButtonSetEnd_Click" IsEnabled="False"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="timer" VerticalAlignment="Top" Height="18" Width="56" TextDecorations="Underline"/>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="0,32,0,0" VerticalAlignment="Top" Width="150">
+                <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="current" VerticalAlignment="Top"/>
+                <TextBlock x:Name="CurrentTime" HorizontalAlignment="Left" Margin="62,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="78"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="28" Margin="0,82,0,0" VerticalAlignment="Top" Width="150">
+                <TextBlock HorizontalAlignment="Left" Margin="10,2,0,0" TextWrapping="Wrap" Text="best" VerticalAlignment="Top"/>
+                <TextBlock x:Name="BestTime" HorizontalAlignment="Left" Margin="62,2,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="28" Margin="0,54,0,0" VerticalAlignment="Top" Width="150">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="delta" VerticalAlignment="Top"/>
+                <TextBlock x:Name="Delta" HorizontalAlignment="Left" Margin="62,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70"><Run Text=""/><LineBreak/><Run/></TextBlock>
+            </Grid>
+            <Button x:Name="ButtonResetAll" Content="reset all" HorizontalAlignment="Left" Margin="65,0,0,0" VerticalAlignment="Top" Width="75" Click="ButtonResetAll_Click" IsEnabled="False"/>
+        </Grid>
+        <Separator Margin="0,623,0,-537"/>
     </Grid>
 </Window>
