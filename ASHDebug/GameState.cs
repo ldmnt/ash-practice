@@ -12,17 +12,17 @@ namespace ASHDebug
         private static readonly int FLIGHT_COOLDOWN = 1000;
 
         private static readonly string UNITYPLAYER_MODULE = "UnityPlayer.dll";
-        private static readonly int[] PLAYER = { 0x109ac54, 0x38, 0x34, 0x3C, 0x44 };
+        private static readonly int[] PLAYER = { 0x1293454, 0x64, 0x54, 0x44 };
         private static readonly int[] PLAYER_VELOCITY_OFFSETS = { 0x10, 0x8, 0x34, 0x11C };
-        private static readonly int[] PLAYER_TRANSFORM_OFFSETS = { 0x8, 0x1C, 0x1C, 0x4, 0x18 };
-        private static readonly int[] PLAYER_TRANSFORM_POSITION_OFFSETS = { 0x8, 0x20, 0x10, 0x30 };
-        private static readonly int MAX_FEATHERS = 0x234;
+        private static readonly int[] PLAYER_POSITION_OFFSET_OFFSETS = { 0x8, 0x1C, 0x1C, 0x4, 0x24 };
+        private static readonly int[] PLAYER_POSITION_OFFSETS = { 0x8, 0x1C, 0x1C, 0x4, 0x20, 0x10 };
+        private static readonly int MAX_FEATHERS = 0x254;
         private static readonly int IS_GROUNDED = 0x44;
-        private static readonly int IS_CLIMBING = 0x1F8;
-        private static readonly int IS_FACING_WALL = 0x230;     // probably more of a "is facing something"
-        private static readonly int PULLING_AGAINST = 0xC4;     // pointer that is only non null when pulling against a fish
-        private static readonly int GLIDE_START_COUNTDOWN = 0x218;  // counts down trying to glide, glide at 0, then keeps going negative until reset
-        private static readonly int WATER_Y = 0x1F4;    // water surface altitude, -1000 when not in water
+        private static readonly int IS_CLIMBING = 0x214;
+        private static readonly int IS_FACING_WALL = 0x250;     // probably more of a "is facing something"
+        private static readonly int PULLING_AGAINST = 0xD8;     // pointer that is only non null when pulling against a fish
+        private static readonly int GLIDE_START_COUNTDOWN = 0x238;  // counts down trying to glide, glide at 0, then keeps going negative until reset
+        private static readonly int WATER_Y = 0x210;    // water surface altitude, -1000 when not in water
 
         public Vector Position;
         public Vector Velocity;
@@ -119,8 +119,9 @@ namespace ASHDebug
             Velocity = Memory.ReadPointerChain<Vector>(player, PLAYER_VELOCITY_OFFSETS);
             HorizontalSpeed = (float) Math.Sqrt(Math.Pow(Velocity.X, 2) + Math.Pow(Velocity.Z, 2));
 
-            int transform = Memory.ReadPointerChain<int>(player, PLAYER_TRANSFORM_OFFSETS);
-            Position = Memory.ReadPointerChain<Vector>(transform, PLAYER_TRANSFORM_POSITION_OFFSETS);
+            int position_pointer = Memory.ReadPointerChain<int>(player, PLAYER_POSITION_OFFSETS);
+            int position_offset = 48 * Memory.ReadPointerChain<int>(player, PLAYER_POSITION_OFFSET_OFFSETS);
+            Position = Memory.ReadPointer<Vector>(position_pointer, position_offset);
 
             MaxFeathers = Memory.ReadPointer<int>(player, MAX_FEATHERS);
 
