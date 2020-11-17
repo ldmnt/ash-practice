@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="ASH Practice" Height="750" Width="160"
+        Title="ASH Practice" Height="828.001" Width="160"
         ResizeMode="NoResize"
         Topmost="False"
         Closing="OnWindowClosed">
@@ -60,6 +60,14 @@
                 <TextBlock x:Name="MaxHorSpeed" HorizontalAlignment="Right" Margin="0,2,84,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46"/>
             </Grid>
             <Ellipse x:Name="FlightCooldown" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,5,44,146" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
+            <Grid HorizontalAlignment="Left" Height="18" Margin="10,321,-93,-177" VerticalAlignment="Top" Width="224">
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="hits :" VerticalAlignment="Top" Height="22" Margin="-2,0,0,-4"/>
+                <TextBlock x:Name="VolleyballHits" Margin="30,0,140,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="18" Margin="10,344,-93,-200" VerticalAlignment="Top" Width="224">
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="best :" VerticalAlignment="Top" Height="22" Margin="-2,0,0,-4" Width="32"/>
+                <TextBlock x:Name="VolleyballBest" Margin="35,0,135,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            </Grid>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="112" Margin="0,343,-1,-360" VerticalAlignment="Top" Width="107">
             <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="status" VerticalAlignment="Top" TextDecorations="Underline"/>
@@ -72,12 +80,12 @@
             <Ellipse x:Name="Climbing" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,67,15,33" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
             <Ellipse x:Name="Swimming" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,87,15,12" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
         </Grid>
-        <Button Content="attach" HorizontalAlignment="Center" Margin="46,664,46,-593" VerticalAlignment="Top" Width="58" Height="24" Click="AttachButtonClick"/>
-        <CheckBox x:Name="AlwaysOnTop" Content="always on top" HorizontalAlignment="Left" Height="17" Margin="10,642,0,-564" VerticalAlignment="Top" Width="113" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxUnchecked"/>
+        <Button Content="attach" HorizontalAlignment="Center" Margin="46,747,46,-676" VerticalAlignment="Top" Width="58" Height="24" Click="AttachButtonClick"/>
+        <CheckBox x:Name="AlwaysOnTop" Content="always on top" HorizontalAlignment="Left" Height="17" Margin="10,725,0,-647" VerticalAlignment="Top" Width="113" Checked="OnTopCheckBoxChecked" Unchecked="OnTopCheckBoxUnchecked"/>
         <Separator Margin="0,162,0,-76"/>
         <Separator Margin="0,329,0,-243"/>
         <Separator Margin="0,460,0,-374"/>
-        <Grid HorizontalAlignment="Left" Height="149" Margin="0,474,0,-528" VerticalAlignment="Top" Width="150">
+        <Grid HorizontalAlignment="Left" Height="149" Margin="0,557,0,-611" VerticalAlignment="Top" Width="150">
             <Button x:Name="ButtonSetStart" Content="set start" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" Width="56" Height="24" Click="ButtonSetStart_Click" IsEnabled="False"/>
             <Button x:Name="ButtonSetEnd" Content="set end" HorizontalAlignment="Left" Margin="84,115,0,0" VerticalAlignment="Top" Width="56" Height="24" Click="ButtonSetEnd_Click" IsEnabled="False"/>
             <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="timer" VerticalAlignment="Top" Height="18" Width="56" TextDecorations="Underline"/>
@@ -98,6 +106,14 @@
             </Grid>
             <Button x:Name="ButtonResetAll" Content="reset all" HorizontalAlignment="Left" Margin="65,0,0,0" VerticalAlignment="Top" Width="75" Click="ButtonResetAll_Click" IsEnabled="False"/>
         </Grid>
-        <Separator Margin="0,623,0,-537"/>
+        <Separator Margin="0,706,0,-620"/>
+        <Grid HorizontalAlignment="Left" Height="42" Margin="-2,474,0,-421" VerticalAlignment="Top" Width="150">
+            <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="beachstickball counter" VerticalAlignment="Top" TextDecorations="Underline" Width="132"/>
+            <Ellipse x:Name="Grounded1" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,27,15,77" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
+            <Ellipse x:Name="Gliding1" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,47,15,54" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
+            <Ellipse x:Name="Climbing1" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,67,15,33" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
+            <Ellipse x:Name="Swimming1" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="8" Margin="0,87,15,12" Stroke="Black" Width="8" RenderTransformOrigin="0.159,-0.392" VerticalAlignment="Center" Visibility="Hidden"/>
+        </Grid>
+        <Separator Margin="0,543,0,-457"/>
     </Grid>
 </Window>

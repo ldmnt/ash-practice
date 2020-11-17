@@ -82,6 +82,7 @@ namespace ASHPracticeGUI
         private DebugEngine Engine;
         private short FrameCountdown = 1;
         private short RefreshPeriod;    // number of debug frames between each refresh
+        private int VolleyballHitsBest = 0;
 
         public MainWindow()
         {
@@ -149,6 +150,13 @@ namespace ASHPracticeGUI
                 HorizontalSpeed.Text = gameState.HorizontalSpeed.ToString("F2");
                 VerticalSpeed.Text = gameState.Velocity.Y.ToString("F2");
             }
+
+            VolleyballHits.Text = gameState.VolleyballHits.ToString();
+            if (gameState.VolleyballHits > VolleyballHitsBest)
+            {
+                VolleyballHitsBest = gameState.VolleyballHits;
+            }
+            VolleyballBest.Text = VolleyballHitsBest.ToString();
         }
 
         private void OnWindowClosed(object sender, CancelEventArgs e)

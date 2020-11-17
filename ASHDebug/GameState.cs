@@ -23,6 +23,11 @@ namespace ASHDebug
         private static readonly int PULLING_AGAINST = 0xD8;     // pointer that is only non null when pulling against a fish
         private static readonly int GLIDE_START_COUNTDOWN = 0x238;  // counts down trying to glide, glide at 0, then keeps going negative until reset
         private static readonly int WATER_Y = 0x210;    // water surface altitude, -1000 when not in water
+        private static readonly int[] VOLLEYBALL_CONTROLLER_OFFSETS = { 0x104, 0x8, 0x10, 0x8, 0x1c, 0x1c, 0xc, 0x18 };
+        private static readonly int VOLLEYBALL_PLAYER = 0x58;
+        private static readonly int VOLLEYBALL_HITS = 0xc0;
+        private static readonly int VOLLEYBALL_PLAYER_SHOULD_CATCH = 0xb8;
+        private static readonly int VOLLEYBALL_GAME_STARTED = 0xb9;
 
         public Vector Position;
         public Vector Velocity;
@@ -37,6 +42,8 @@ namespace ASHDebug
 
         public int MaxFeathers { get; private set; }
 
+        public bool VolleyballGameStarted = false;
+
         public TimeSpan FlightDuration { get; private set; }
         public TimeSpan GlideDuration { get; private set; }
         public float MaxHorizontalSpeed { get; private set; }
@@ -48,8 +55,11 @@ namespace ASHDebug
 
         private Memory Memory;
         private int BaseAddress;
+        private int VolleyBallControllerAddress = 0;
 
         private int LastFlightEnd = 0;
+        private bool VolleyballPlayerShouldCatch = false;
+        private int VolleyballPlayerHits = 0;
 
         public GameState(Process process)
         {
@@ -103,6 +113,14 @@ namespace ASHDebug
             }
         }
 
+        public int VolleyballHits
+        {
+            get
+            {
+                return 2 * VolleyballPlayerHits + Convert.ToInt32(VolleyballPlayerShouldCatch);
+            }
+        }
+
         public void Update()
         {
             bool oldIsFlyingOrClimbing = IsFlyingOrClimbing;
@@ -124,6 +142,22 @@ namespace ASHDebug
             Position = Memory.ReadPointer<Vector>(position_pointer, position_offset);
 
             MaxFeathers = Memory.ReadPointer<int>(player, MAX_FEATHERS);
+
+            int volley_candidate = Memory.ReadPointerChain<int>(player, VOLLEYBALL_CONTROLLER_OFFSETS);
+            if (!VolleyballGameStarted && volley_candidate != VolleyBallControllerAddress)
+            {
+                int volleyball_player = Memory.ReadPointer<int>(volley_candidate, VOLLEYBALL_PLAYER);
+                if (volleyball_player == player)
+                {
+                    VolleyBallControllerAddress = volley_candidate;
+                }
+            }
+            if (VolleyBallControllerAddress != 0)
+            {
+                VolleyballPlayerHits = Memory.ReadPointer<int>(VolleyBallControllerAddress, VOLLEYBALL_HITS);
+                VolleyballPlayerShouldCatch = Memory.ReadPointer<bool>(VolleyBallControllerAddress, VOLLEYBALL_PLAYER_SHOULD_CATCH);
+                VolleyballGameStarted = Memory.ReadPointer<bool>(VolleyBallControllerAddress, VOLLEYBALL_GAME_STARTED);
+            }
 
             if (oldIsFlyingOrClimbing != IsFlyingOrClimbing && !FlightIsOnCooldown)
             {
